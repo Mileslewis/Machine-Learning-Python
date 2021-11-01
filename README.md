@@ -5,3 +5,9 @@ I will try to give a brief desciption of what each file does here:
 
 **Stocastic Linear:**
 My first file written. Creates some integer feature points within a certain range and corresponding labels = a + b * feature. Where a and b are chosen constants. Random values are then chosen for w1 and w2 to create the model y = w1 + w2 * x and then gradient descent is used on the squared loss for each individual feature (Stochastic Gradient Descent as I understand it) to update the values of w1 and w2 in the model. 'learning_rate' and 'repeats' are also constants to be chosen. 'repeats' decides how many times the full set of features will be iterated through. A list is used to hold the average squared losses from the initial randomized model and from the model during each iteration. This is used to make a graph of the average squared loss during each iteration. A pandas dataframe is used to hold the features, labels and model predictions for each feature in the first randomized model and then after the end of each iteration through all the features and then a graph is created to show the model's line graph at each of these times compared to the correct (labels) line graph.
+
+**Stocastic Linear (better graphs):**
+Does the same as 'Stochastic Linear' but graphs are slightly different.
+Lines after each iteration are done with dashes and initial line is done with dots for clarity.
+Average squared losses show logarithmically.
+Probably won't be useful going forward but I thought the graphs looked better for this particular case.
