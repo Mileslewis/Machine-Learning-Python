@@ -4,8 +4,8 @@
 #'learning_rate' and 'repeats' are also constants to be chosen. 'repeats' decides how many times the full set of features will be iterated through.
 # A list is used to hold the average squared losses from the initial randomized model and from the model during each iteration. This is used for average squared loss graph later.
 # A pandas dataframe is used to hold the features, labels and model predictions for each feature in the first randomized model and then after the end of each iteration through all the features
-# A graph is then created to show the model's line graph at each of these times compared to the correct (labels) line graph.
- 
+# A graph is then created from the dataframe to show the model's line graph at each of these times compared to the correct (labels) line graph.
+
 import random
 import pandas as pd
 import plotly.express as px
