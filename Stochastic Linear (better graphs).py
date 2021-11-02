@@ -1,6 +1,6 @@
 ## Does the same as 'Stochastic Linear' but graphs are slightly different.
 # Lines after each iteration are done with dashes and initial line is done with dots for clarity.
-# Average squared losses show logarithmically.
+# Average squared losses shown logarithmically.
 # Probably won't be useful going forward but I thought the graphs looked better for this particular case.
 
 import random
