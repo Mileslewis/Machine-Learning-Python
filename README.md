@@ -19,5 +19,6 @@ I will try to give a brief desciption of what each file does here:
 - Average squared losses show logarithmically.
 - Probably won't be useful going forward but I thought the graphs looked better for this particular case.
 
-Next stage is batch instead of stachastic gradient descent and also using more complicated models (more features).
-Then Regularization, and separate training and test sets with noise included.
+Stochastic linear models did successfully converge to the correct line graphs so now we can try adding some complexity:
+Next stage will be trying batch instead of stachastic gradient descent and also using more complicated models (more features).
+Then Regularization, and separate training and test sets which are normalised and have noise included.
