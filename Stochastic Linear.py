@@ -31,7 +31,7 @@ df.insert(loc=1,column = 0,value = [w1 + w2 * x for x in features])
 #print(f"0: {w1} + {w2}x")
 initial_losses = 0
 for i, feature in enumerate(features):
-    initial_losses = initial_losses + (w1 + w2 * features[i] - labels[i])**2
+    initial_losses = initial_losses + (w1 + w2 * feature - labels[i])**2
 initial_losses = initial_losses / len(features)
 losses = [initial_losses]       # list holds average squared loss initially and then during each iteration
 columns = [0]       # used to hold the names of each column of 'df' for used in creating the line graph
@@ -40,8 +40,8 @@ ave_loss = 0
 for j in range(repeats):
     for i, feature in enumerate(features):
         #print(f"loss = {(w1 + w2 * features[i] - labels[i])**2}")
-        ave_loss = ave_loss + (w1 + w2 * features[i] - labels[i])**2
-        diff_w1, diff_w2 = grad(w1, w2, features[i], labels[i])
+        ave_loss = ave_loss + (w1 + w2 * feature - labels[i])**2
+        diff_w1, diff_w2 = grad(w1, w2, feature, labels[i])
         #print(f"d{i + j * len(features)}: {(diff_w1,diff_w2)}")
         w1, w2 = w1 - diff_w1 * learning_rate, w2 - diff_w2 * learning_rate
         #print(f"model {i+1 + j * len(features)}: {w1} + {w2}x")
