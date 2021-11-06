@@ -46,12 +46,12 @@ for j in range(repeats):
         w1, w2 = w1 - diff_w1 * learning_rate, w2 - diff_w2 * learning_rate
         #print(f"model {i+1 + j * len(features)}: {w1} + {w2}x")
 
-        if i == len(features) - 1:
-            ave_loss = ave_loss / len(features)
-            losses.append(ave_loss)
-            ave_loss = 0
-            df.insert(loc=j+2,column = j+1,value = [w1 + w2 * x for x in features])
-            columns.append(j+1)
+
+    ave_loss = ave_loss / len(features)
+    losses.append(ave_loss)
+    ave_loss = 0
+    df.insert(loc=j+2,column = j+1,value = [w1 + w2 * x for x in features])
+    columns.append(j+1)
 df.insert(loc=repeats+2,column = "target",value = labels)
 columns.append("target")
 px.line(losses, labels={'index': "iteration", 'value': "loss"}, title = "average squared loss during each Iteration through all points").show()
