@@ -62,7 +62,7 @@ features.append(feature_y)
 #print(features)
 
 #############   create labels with noise    ##########
-noise = 0
+noise = 0.01
 
 target_model = [random.random() * 4 - 2, random.random() * 4 - 2, random.random() * 4 - 2]
 print(f"Target Model: {target_model}")
@@ -82,6 +82,7 @@ print(f"Initial Model: {initial_model}")
 learning_rate = [0.1, 0.05, 0.03, 0.01]
 batch = [15,5,1]
 repeats = 25
+cutoff = 1000000
 
 df = pd.DataFrame()
 columns = []
@@ -96,9 +97,10 @@ for L in learning_rate:
         while iteration < repeats:
             total_losses.append(update(model,features,labels,B,L))
             #print(f"{iteration+1}: {model}")
-            if total_losses[iteration] > 1000000:       # if the model has deconverged
+            if total_losses[iteration] > cutoff:       # if the model has deconverged
                 for i in range(iteration+1,repeats):
-                    total_losses.append(total_losses[iteration])
+                    total_losses[iteration]= cutoff
+                    total_losses.append(cutoff)
                 break
 
             iteration = iteration + 1
@@ -110,6 +112,6 @@ for L in learning_rate:
         columns.append(column)
         #print(f"batch size: {B}, learning rate: {L}  final model: {model}, final loss: {total_losses[iteration - 1]}")
 
-px.line(df,y=[x for x in columns], title = "Squared loss during each epoch for models which converged", labels={'value': "squared loss", 'index': "epoch"}, log_y=True).show()
+px.line(df,y=[x for x in columns], title = "Squared loss at each epoch for Initial Model with different Batch Sizes/Learning Rates", labels={'value': "squared loss", 'index': "epoch"}, log_y=True).show()
 
 
