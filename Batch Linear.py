@@ -6,7 +6,7 @@
 #   Model is fed into update function which updates using gradient descent on the squared loss of each batch
 #   Same initial model is semt through a given number of iterations with various different batch size/learning rate
 #   Line graph of squared loss shows how the model converged for various batch sizes and learning rates
-#   Models which reached squared loss over 1 million are stopped and ommited to keep graph clean + stop value errors
+#   Models which reached squared loss over 1 million are frozen to keep graph clean + stop value errors
 
 import random
 import pandas as pd
@@ -81,7 +81,7 @@ print(f"Initial Model: {initial_model}")
 #############    set hyperparameters and make graphs   #########
 learning_rate = [0.1, 0.05, 0.03, 0.01]
 batch = [15,5,1]
-repeats = 40
+repeats = 25
 
 df = pd.DataFrame()
 columns = []
@@ -97,15 +97,17 @@ for L in learning_rate:
             total_losses.append(update(model,features,labels,B,L))
             #print(f"{iteration+1}: {model}")
             if total_losses[iteration] > 1000000:       # if the model has deconverged
-                iteration = iteration + 1
+                for i in range(iteration+1,repeats):
+                    total_losses.append(total_losses[iteration])
                 break
+
             iteration = iteration + 1
 
-        if total_losses[iteration - 1] <= 1000000:
-            column = f"batch size: {B}, learning rate: {L}"
-            df.insert(location, column, total_losses)
-            location = location + 1
-            columns.append(column)
+
+        column = f"batch size: {B}, learning rate: {L}"
+        df.insert(location, column, total_losses)
+        location = location + 1
+        columns.append(column)
         #print(f"batch size: {B}, learning rate: {L}  final model: {model}, final loss: {total_losses[iteration - 1]}")
 
 px.line(df,y=[x for x in columns], title = "Squared loss during each epoch for models which converged", labels={'value': "squared loss", 'index': "epoch"}, log_y=True).show()
