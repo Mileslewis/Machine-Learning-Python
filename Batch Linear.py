@@ -1,17 +1,24 @@
+##  Uses an update model function to update the model once through all features and labels using a given batch size and learning rate.
+#   Should work for any model/features/labels with the correct dimensions
+#   Features are random points x, y within a certain range and a feature which is always 1 for a constant term
+#   Labels are created from the target model which correspond to the created features and have an added noise amount
+#   Initial model is created with random coefficients
+#   Model is fed into update function which updates using gradient descent on the squared loss of each batch
+#   Same initial model is semt through a given number of iterations with various different batch size/learning rate
+#   Line graph of squared loss shows how the model converged for various batch sizes and learning rates
+#   Models which reached squared loss over 1 million are stopped and ommited to keep graph clean + stop value errors
 
 import random
 import pandas as pd
 import plotly.express as px
 
-target_model = [random.random() * 4 - 2, random.random() * 4 - 2, random.random() * 4 - 2]
-print(f"Target Model: {target_model}")
-data_points = 40
-noise = 0
-model_size = len(target_model)
+
+############    update model function   ############
 
 def update(model,features,labels,batch_size,learning_rate):
     i = 0
     total_loss = 0
+    model_size = len(model)
     while i < len(labels):
         batch_end = i + batch_size
         if batch_end > len(labels):
@@ -32,10 +39,13 @@ def update(model,features,labels,batch_size,learning_rate):
             model[j] = model[j] - learning_rate * total_diff[j]
     return(total_loss)
 
-## create features
+##############    create randomised features     ###########
+data_points = 40
+
 feature_const = []
 feature_x = []
 feature_y = []
+
 
 for x in range(data_points):
     feature_const.append(1)     # for a constant term
@@ -51,19 +61,24 @@ features.append(feature_x)
 features.append(feature_y)
 #print(features)
 
-## create labels with noise
+#############   create labels with noise    ##########
+noise = 0
+
+target_model = [random.random() * 4 - 2, random.random() * 4 - 2, random.random() * 4 - 2]
+print(f"Target Model: {target_model}")
 labels = []
+
 
 for i in range(data_points):
     label = 0
-    for a in range(model_size):
+    for a in range(len(features)):
         label = label + target_model[a] * features[a][i] + 2 * random.random() * noise - noise
     labels.append(label)
 
 initial_model = [random.random() * 4 - 2,random.random() * 4 - 2,random.random() * 4 - 2]
 print(f"Initial Model: {initial_model}")
 
-## set hyperparameters
+#############    set hyperparameters and make graphs   #########
 learning_rate = [0.1, 0.05, 0.03, 0.01]
 batch = [15,5,1]
 repeats = 40
