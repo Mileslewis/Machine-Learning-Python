@@ -1,25 +1,23 @@
 import random
 
-DATA_POINTS = 40
-
-
 class Features:
     def __init__(self):
-        self.feature_const = []
-        self.feature_x = []
-        self.feature_y = []
         self.features = []
 
-    def main(self):
-        for x in range(DATA_POINTS):
-            self.feature_const.append(1)  # for a constant term
-            self.feature_x.append(random.random() * 6 - 3)
-            self.feature_y.append(random.random() * 2 - 1)
+    def test_features(self):
+        TEST_DATA_POINTS = 40
+        feature_const = []
+        feature_x = []
+        feature_y = []
+        for x in range(TEST_DATA_POINTS):
+            feature_const.append(1)  # for a constant term
+            feature_x.append(random.random() * 6 - 3)
+            feature_y.append(random.random() * 2 - 1)
 
-        random.shuffle(self.feature_x)
-        random.shuffle(self.feature_y)
+        random.shuffle(feature_x)
+        random.shuffle(feature_y)
 
-        self.features.append(self.feature_const)
-        self.features.append(self.feature_x)
-        self.features.append(self.feature_y)
+        self.features.append(feature_const)
+        self.features.append(feature_x)
+        self.features.append(feature_y)
         return self.features

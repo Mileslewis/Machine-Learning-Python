@@ -1,32 +1,32 @@
 import random
 
-DATA_POINTS = 40
-
-
 class Labels:
-    def __init__(self, features=None) -> None:
-        if not features:
-            raise Exception("Labels need features")
-        self.features = features
-        self.noise = 0.01
-
-        self.target_model = [
-            random.random() * 4 - 2,
-            random.random() * 4 - 2,
-            random.random() * 4 - 2,
-        ]
-        print(f"Target Model: {self.target_model}")
+    def __init__(self):
         self.labels = []
 
-    def main(self):
-        for i in range(DATA_POINTS):
+    def test_labels_linear(self,features):
+        TEST_NOISE = 0.01
+        target_model = [random.random() * 4 - 2 for a in features]
+        print(f"Target Model: {target_model}")
+        for i in range(len(features[0])):
             label = 0
-            for a in range(len(self.features)):
-                label = (
-                    label
-                    + self.target_model[a] * self.features[a][i]
-                    + 2 * random.random() * self.noise
-                    - self.noise
-                )
+            for a in range(len(features)):
+                label += target_model[a] * features[a][i]
+            label += 2 * random.random() * TEST_NOISE - TEST_NOISE
             self.labels.append(label)
+        return self.labels
+
+    def test_labels_logistic(self,features):
+        TEST_NOISE = 0.01
+        target_model = [random.random() * 4 - 2 for a in features]
+        print(f"Target Model: {target_model}")
+        for i in range(len(features[0])):
+            label = 0
+            for a in range(len(features)):
+                label += target_model[a] * features[a][i]
+            label += 2 * random.random() * TEST_NOISE - TEST_NOISE
+            if label>0:
+                self.labels.append(1)
+            else:
+                self.labels.append(0) 
         return self.labels

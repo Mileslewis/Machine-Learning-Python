@@ -8,9 +8,9 @@ from miles_models import Models
 
 def run():
     #############    set hyperparameters and make graphs   #########
-    features = Features().main()
-    labels = Labels(features).main()
-    initial_model = Models()
+    features = Features().test_features()
+    labels = Labels().test_labels_linear(features)
+    initial_model = Models([],regression = "linear")
     initial_model.random_model(features, 2)
     print("starting_model:")
     initial_model.print_weights()
@@ -19,7 +19,7 @@ def run():
     #############    set hyperparameters and make graphs   #########
     learning_rate = [0.1, 0.05, 0.03, 0.01]
     batch = [15, 5, 1]
-    repeats = 25
+    repeats = 50
     cutoff = 1000000
 
     df = pd.DataFrame()
@@ -49,7 +49,7 @@ def run():
             df.insert(location, column, total_losses)
             location = location + 1
             columns.append(column)
-            # print(f"batch size: {B}, learning rate: {L}  final model: {model.weights}, final average loss: {model.test(features,labels)}")
+            print(f"batch size: {B}, learning rate: {L}  final model: {model.weights}, final average loss: {model.test(features,labels)}")
     px.line(
         df,
         y=[x for x in columns],

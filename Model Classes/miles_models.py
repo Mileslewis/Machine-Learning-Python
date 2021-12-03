@@ -1,5 +1,5 @@
 import random
-
+import math
 
 class Models:
     def __init__(self, weights=[], regression="linear"):
@@ -34,13 +34,24 @@ class Models:
             total_diff = [0 for j in range(model_size)]
             while i < batch_end:
                 loss = 0
-                for k in range(model_size):
-                    loss += self.weights[k] * features[k][i]
-                loss -= labels[i]
-                # print(f"{i} loss: {loss}")
-                total_loss += loss ** 2
-                for j in range(model_size):
-                    total_diff[j] += 2 * features[j][i] * loss
+                if self.regression == "linear":
+                    for k in range(model_size):
+                        loss += self.weights[k] * features[k][i]
+                    loss -= labels[i]
+                    # print(f"{i} loss: {loss}")
+                    total_loss += loss ** 2
+                    for j in range(model_size):
+                        total_diff[j] += 2 * features[j][i] * loss
+                elif self.regression == "logistic":
+                    value = 0
+                    for k in range(model_size):
+                        value += self.weights[k] * features[k][i]
+                    predicted = 1 / (1 + math.exp(-value))
+                    loss = - labels[i] * math.log(predicted) - (1 - labels[i]) * math.log(1 - predicted)
+                    # print(f"{i} loss: {loss}")
+                    total_loss += loss
+                    for j in range(model_size):
+                        total_diff[j] += features[j][i] * (predicted - labels[i])
                 # print(f"diff: {total_diff}")
                 i += 1
             for j in range(model_size):
@@ -63,9 +74,14 @@ class Models:
         total_loss = 0
         model_size = len(self.weights)
         for i, label in enumerate(labels):
-            loss = 0
+            value = 0
             for k in range(model_size):
-                loss += self.weights[k] * features[k][i]
-            loss -= label
-            total_loss += loss ** 2
+                value += self.weights[k] * features[k][i]
+            if self.regression == "linear":
+                loss = value - label
+                total_loss += value ** 2
+            elif self.regression == "logistic":
+                predicted = 1 / (1 + math.exp(-value))
+                loss = - labels[i] * math.log(predicted) - (1 - labels[i]) * math.log(1 - predicted)
+                total_loss += loss
         return total_loss / max(1, len(labels))
