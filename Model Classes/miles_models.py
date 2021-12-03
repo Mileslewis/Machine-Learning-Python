@@ -79,7 +79,8 @@ class Models:
                 value += self.weights[k] * features[k][i]
             if self.regression == "linear":
                 loss = value - label
-                total_loss += value ** 2
+                #print(loss)
+                total_loss += loss ** 2
             elif self.regression == "logistic":
                 predicted = 1 / (1 + math.exp(-value))
                 loss = - labels[i] * math.log(predicted) - (1 - labels[i]) * math.log(1 - predicted)
