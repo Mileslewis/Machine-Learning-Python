@@ -3,7 +3,7 @@ Various machine learning files, written by me, but using knowledge from: https:/
 These were mostly done to test out various concepts in Machine Learning (ML) but also to help me learn Python, since this is the first time I am using it.
 I will try to give a brief desciption of what each file does here:
 
-**Model Classes**
+**Model Classes:**
 
 **Features:**
 - Function to create test features with various options.
@@ -24,7 +24,7 @@ I will try to give a brief desciption of what each file does here:
 
 - Next will be increasing the complexity of model to allow neural network and potentially trying some different input methods.
 
-**main**
+**main:**
 - Currently just calls the test functions which a model with each regression type with various hyperperamters and then creates graphs for comparisions.
 
 - Hopefully will make some new scripts to try my classes out with real input data.
