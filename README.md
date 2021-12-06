@@ -31,6 +31,7 @@ I will try to give a brief desciption of what each file does here:
 
 
 **Archive**
+
 **Stocastic Linear:**
 - My first file written.
 - Creates some integer feature points within a certain range and corresponding labels = a + b * features.
