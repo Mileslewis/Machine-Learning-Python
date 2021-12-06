@@ -2,16 +2,19 @@
 Various machine learning files, written by me, but using knowledge from: https://developers.google.com/machine-learning/crash-course/ml-intro
 These were mostly done to test out various concepts in Machine Learning (ML) but also to help me learn Python, since this is the first time I am using it.
 I will try to give a brief desciption of what each file does here:
-\n
+
 **Model Classes**
+
 **Features:**
 - Function to create test features with various options.
 
 - Plan to have many functions for input data handling and a copy_format() function which can convert new data into the same features format used previously.
+
 **Labels:**
 - Functions to create test labels from inputed features.
 
 - Again plan to have copy_format() function and other data handling functions.
+
 **Models:**
 - Models have a list of coefficiencts and then a 'regression' (linear or logistic) option.
 - Function to create random model with 1 term for each feature.
