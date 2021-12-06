@@ -1,9 +1,9 @@
 import pandas as pd
 import plotly.express as px
 
-from miles_features import Features
-from miles_labels import Labels
-from miles_models import Models
+from Features import Features
+from Labels import Labels
+from Models import Models
 
 def test_linear():
     #############    set hyperparameters and make graphs   #########
@@ -50,7 +50,7 @@ def test_linear():
             df.insert(location, column, total_losses)
             location = location + 1
             columns.append(column)
-            print(f"batch size: {B}, learning rate: {L}  final model: {model.weights}, final average loss: {model.test(features,labels)}")
+            #print(f"batch size: {B}, learning rate: {L}  final model: {model.weights}, final average loss: {model.test(features,labels)}")
     px.line(
         df,
         y=[x for x in columns],
@@ -105,7 +105,7 @@ def test_logistic():
             df.insert(location, column, total_losses)
             location = location + 1
             columns.append(column)
-            print(f"batch size: {B}, learning rate: {L}  final model: {model.weights}, final average log loss: {model.test(features,labels)}")
+            #print(f"batch size: {B}, learning rate: {L}  final model: {model.weights}, final average log loss: {model.test(features,labels)}")
     px.line(
         df,
         y=[x for x in columns],

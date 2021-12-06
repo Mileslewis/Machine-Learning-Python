@@ -5,6 +5,7 @@ class Features:
         self.features = []
 
     def test_features(self,const_feature = True,num_features = 2,data_points = 40,integer_only = False):
+# Make a list of test feature lists, optional constant feature list (always 1) and optional rounding.
         if const_feature:
             feature_const = []
             for x in range(data_points):

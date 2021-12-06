@@ -16,6 +16,7 @@ class Models:
         print(self.regression)
 
     def random_model(self, features, size=1, norm=True):
+# random starting weight for each feature.
         self.weights.clear()
         for i in range(len(features)):
             if norm:
@@ -24,6 +25,7 @@ class Models:
                 self.weights.append(size * random.random())
 
     def update(self, features, labels, batch_size, learning_rate, l2=0, l1=0):
+# updates a model once through given features/labels set using batch gradient descent and regularization.
         i = 0
         total_loss = 0
         model_size = len(self.weights)
@@ -71,6 +73,7 @@ class Models:
         return total_loss
 
     def test(self, features, labels):
+# tests loss of model with given features/labels.
         total_loss = 0
         model_size = len(self.weights)
         for i, label in enumerate(labels):

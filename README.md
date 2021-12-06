@@ -2,7 +2,31 @@
 Various machine learning files, written by me, but using knowledge from: https://developers.google.com/machine-learning/crash-course/ml-intro
 These were mostly done to test out various concepts in Machine Learning (ML) but also to help me learn Python, since this is the first time I am using it.
 I will try to give a brief desciption of what each file does here:
+**Model Classes**
+**Features:**
+- Function to create test features with various options.
 
+- Plan to have many functions for input data handling and a copy_format() function which can convert new data into the same features format used previously.
+**Labels:**
+- Functions to create test labels from inputed features.
+
+- Again plan to have copy_format() function and other data handling functions.
+**Models:**
+- Models have a list of coefficiencts and then a 'regression' (linear or logistic) option.
+- Function to create random model with 1 term for each feature.
+- Copy() function to copy a model so that it can be updated multiple times from the same inital state to compare rsesults.
+- update() function to update a model once through given features/labels set using batch gradient descent and regularization.
+- test() function to test loss of model with given features/labels.
+
+- Next will be increasing the complexity of model to allow neural network and potentially trying some different input methods.
+
+**main**
+- Currently just calls the test functions which a model with each regression type with various hyperperamters and then creates graphs for comparisions.
+
+- Hopefully will make some new scripts to try my classes out with real input data.
+
+
+**Archive**
 **Stocastic Linear:**
 - My first file written.
 - Creates some integer feature points within a certain range and corresponding labels = a + b * features.
@@ -21,14 +45,11 @@ I will try to give a brief desciption of what each file does here:
 
 Stochastic linear models did successfully converge to the correct line graphs so now we can try adding some complexity:
 
-**Batch Linear:**
+**Batch Regression:**
 - Uses Update model function which should be able to accept any well formed model+features+labels combination
 - Does gradient descent on given batch sizes with given learning rate once through the whole set of labels
+- Optional l1 and l2 regularization terms.
+- test() function to test final model with a set of features and lables.
 - Rest of the file is just generating Target model, Initial Model, features and labels to put into the update function
 - Line graph generated with lines of squared loss for same Initial Model but with different batch sizes/ learning rates to compare
 
-Batch Linear update fucntion seems to work very well so should be usable going forward.
-I found that larger batch sizes were more senstive to features which weren't normalised/randomly ordered but did sometimes give better models when they were.
-
-Next steps are including regularization, other loss functions and perhaps testing on some real data.
-Seems like making the function work on an object would also be a good idea at some point but I haven't got that far in Python yet.

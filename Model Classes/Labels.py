@@ -5,6 +5,7 @@ class Labels:
         self.labels = []
 
     def test_labels_linear(self,features,noise = 0):
+# makes a list of test labels from inputted features with a random 'target_model'
         target_model = [random.random() * 4 - 2 for a in features]
         print(f"Target Model: {target_model}")
         for i in range(len(features[0])):
@@ -16,6 +17,7 @@ class Labels:
         return self.labels
 
     def test_labels_logistic(self,features,noise = 0):
+# makes a list of test labels from inputted features with a random 'target_model'
         target_model = [round(random.random() * 10 - 5) for a in features]
         print(f"Target Model: {target_model}")
         for i in range(len(features[0])):
