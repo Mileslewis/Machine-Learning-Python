@@ -1,28 +1,44 @@
 import random
 import math
+from Neuron import Neuron
 
 class Models:
-    def __init__(self, weights=[], regression="linear"):
-        self.weights = weights
+    def __init__(self, neurons=[],weights = [], regression="linear"):
+        self.neurons = neurons
         self.regression = regression
+        self.weights = weights
 
     def copy(self):
-        return Models(weights=self.weights.copy(), regression=self.regression)
+        return Models(neurons=self.neurons.copy(), regression=self.regression)
+
+    def print_model(self):
+        for layer in self.neurons:
+            for neuron in layer:
+                neuron.print_neuron()
 
     def print_weights(self):
-        print(self.weights)
+        print(self.neurons)
 
     def print_regression(self):
         print(self.regression)
 
-    def random_model(self, features, size=1, norm=True):
-# random starting weight for each feature.
-        self.weights.clear()
+    def initialize_model(self, features, regression = "linear"):
+        self.neurons.clear()
+        input_neurons = []
         for i in range(len(features)):
-            if norm:
-                self.weights.append(size * 2 * random.random() - size)
-            else:
-                self.weights.append(size * random.random())
+            input_neurons.append(Neuron(bInput = True))
+        self.neurons.append(input_neurons)
+        self.neurons.append([Neuron(activation = regression,bOutput = True)])
+
+
+
+    def randomize_model(self, size=1, norm=True):
+# random starting weight for each feature.
+        for i in range(len(self.neurons)-1):
+            print(i)
+            for neuron in self.neurons[i]:
+                for j in range(len(self.neurons[i+1])):
+                    neuron.weights.append(random.random() * 2 * size - size)
 
     def update(self, features, labels, batch_size, learning_rate, l2=0, l1=0):
 # updates a model once through given features/labels set using batch gradient descent and regularization.
