@@ -28,7 +28,7 @@ class Models:
         for i in range(len(features)):
             input_neurons.append(Neuron(bInput = True))
         self.neurons.append(input_neurons)
-        self.neurons.append([Neuron(activation = regression,bOutput = True)])
+        self.neurons.append([Neuron(layer = 1, activation = regression,bOutput = True)])
 
 
 
@@ -36,9 +36,21 @@ class Models:
 # random starting weight for each feature.
         for i in range(len(self.neurons)-1):
             print(i)
-            for neuron in self.neurons[i]:
-                for j in range(len(self.neurons[i+1])):
-                    neuron.weights.append(random.random() * 2 * size - size)
+            for j, neuron in enumerate(self.neurons[i]):
+                for k in self.neurons[i+1]:
+                    self.neurons[i][j].weights.append(random.random() * 2 * size - size)
+
+    def add_layer(self, neurons = 1, layer_pos = -1):
+        if layer_pos == -1:
+            layer_pos = len(self.neurons) - 1
+        new_layer = []
+        for i in range(neurons):
+            new_layer.append(Neuron(layer = layer_pos))
+        self.neurons.insert(layer_pos,new_layer)
+        for layer in self.neurons[layer_pos+1:]:
+            for neuron in layer:
+                neuron.layer = neuron.layer + 1
+
 
     def update(self, features, labels, batch_size, learning_rate, l2=0, l1=0):
 # updates a model once through given features/labels set using batch gradient descent and regularization.
