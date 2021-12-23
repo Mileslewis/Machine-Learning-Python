@@ -3,13 +3,18 @@ import math
 from Neuron import Neuron
 
 class Models:
-    def __init__(self, neurons=[],weights = [], regression="linear"):
+    def __init__(self, neurons=[], regression="linear"):
         self.neurons = neurons
         self.regression = regression
-        self.weights = weights
 
     def copy(self):
-        return Models(neurons=self.neurons.copy(), regression=self.regression)
+        copied_neurons = []
+        for j, layer in enumerate(self.neurons):
+            copied_layer = []
+            for k, neuron in enumerate(layer):
+                copied_layer.append(neuron.copy())
+            copied_neurons.append(copied_layer)
+        return Models(neurons=copied_neurons, regression=self.regression)
 
     def print_model(self):
         for layer in self.neurons:
@@ -39,6 +44,7 @@ class Models:
             for j, neuron in enumerate(self.neurons[i]):
                 for k in self.neurons[i+1]:
                     self.neurons[i][j].weights.append(random.random() * 2 * size - size)
+                neuron.reset_gradients()
 
     def add_layer(self, neurons = 1, layer_pos = -1):
         if layer_pos == -1:
@@ -50,70 +56,104 @@ class Models:
         for layer in self.neurons[layer_pos+1:]:
             for neuron in layer:
                 neuron.layer = neuron.layer + 1
+        for neuron in self.neurons[layer_pos-1]:
+            neuron.reset_gradients()
+        
 
 
     def update(self, features, labels, batch_size, learning_rate, l2=0, l1=0):
 # updates a model once through given features/labels set using batch gradient descent and regularization.
         i = 0
         total_loss = 0
-        model_size = len(self.weights)
+        model_length = len(self.neurons)
         while i < len(labels):
             batch_end = i + batch_size
             if batch_end > len(labels):
                 batch_end = len(labels)
-            total_diff = [0 for j in range(model_size)]
+            for layer in self.neurons:
+                for neuron in layer:
+                    neuron.reset_gradients()
             while i < batch_end:
+                for layer in self.neurons:
+                    for neuron in layer:
+                        neuron.forwards_total = 0
+                        neuron.backwards_gradient = 0
                 loss = 0
-                if self.regression == "linear":
-                    for k in range(model_size):
-                        loss += self.weights[k] * features[k][i]
-                    loss -= labels[i]
-                    # print(f"{i} loss: {loss}")
-                    total_loss += loss ** 2
-                    for j in range(model_size):
-                        total_diff[j] += 2 * features[j][i] * loss
-                elif self.regression == "logistic":
-                    value = 0
-                    for k in range(model_size):
-                        value += self.weights[k] * features[k][i]
-                    predicted = 1 / (1 + math.exp(-value))
-                    loss = - labels[i] * math.log(predicted) - (1 - labels[i]) * math.log(1 - predicted)
-                    # print(f"{i} loss: {loss}")
-                    total_loss += loss
-                    for j in range(model_size):
-                        total_diff[j] += features[j][i] * (predicted - labels[i])
+                for j, layer in enumerate(self.neurons):
+                    for k, neuron in enumerate(layer):
+                        if neuron.bInput == True:
+                            neuron.forwards_total = features[k][i]
+                        if neuron.bOutput == False:
+                            for l, weight in enumerate(neuron.weights):
+                                self.neurons[j+1][l].forwards_total += neuron.forwards_total * weight
+                        else:
+                            if neuron.activation == "linear":
+                                loss = neuron.forwards_total - labels[i]
+                                #print(loss)
+                                total_loss += loss ** 2
+                            elif neuron.activation == "logistic":
+                                predicted = 1 / (1 + math.exp(-neuron.forwards_total))
+                                loss = -labels[i] * math.log(predicted) - (1 - labels[i]) * math.log(1 - predicted)
+                                # print(f"{i} loss: {loss}")
+                                total_loss += loss                                
+                # print(f"{i} loss: {loss}")
+                for j in range(model_length-1,-1,-1):
+                    for k, neuron in enumerate(self.neurons[j]):
+                        if neuron.bOutput == True:
+                            if neuron.activation == "linear":
+                                neuron.backwards_gradient = 2 * loss
+                            elif neuron.activation == "logistic":
+                                neuron.backwards_gradient = predicted - labels[i]
+                        else:
+                            for k, n in enumerate(self.neurons[j+1]):
+                                grad = neuron.forwards_total * n.backwards_gradient
+                                neuron.weight_gradients[k] += grad
+                                neuron.backwards_gradient += grad
+
                 # print(f"diff: {total_diff}")
                 i += 1
-            for j in range(model_size):
-                self.weights[j] -= learning_rate * total_diff[j]
-                if l2 > 0:
-                    self.weights[j] -= 2 * l2 * self.weights[j] * learning_rate
-                if l1 > 0:
-                    if self.weights[j] > 0:
-                        self.weights[j] -= l1 * learning_rate
-                        if self.weights[j] < 0:
-                            self.weights[j] = 0
-                    elif self.weights[j] < 0:
-                        self.weights[j] += l1 * learning_rate
-                        if self.weights[j] > 0:
-                            self.weights[j] = 0
+            for j, layer in enumerate(self.neurons):
+                for k, neuron in enumerate(layer):
+                    for l, weight in enumerate(neuron.weights):
+                        #neuron.print_neuron()
+                        #print(neuron.weight_gradients)
+                        neuron.weights[l] -= learning_rate * neuron.weight_gradients[l]
+                        if l2 > 0:
+                            weight -= 2 * l2 * weight * learning_rate
+                        if l1 > 0:
+                            if weight > 0:
+                                weight -= l1 * learning_rate
+                                if weight < 0:
+                                    weight = 0
+                            elif weight < 0:
+                                weight += l1 * learning_rate
+                                if weight > 0:
+                                    weight = 0
 
         return total_loss
 
     def test(self, features, labels):
 # tests loss of model with given features/labels.
         total_loss = 0
-        model_size = len(self.weights)
         for i, label in enumerate(labels):
-            value = 0
-            for k in range(model_size):
-                value += self.weights[k] * features[k][i]
-            if self.regression == "linear":
-                loss = value - label
-                #print(loss)
-                total_loss += loss ** 2
-            elif self.regression == "logistic":
-                predicted = 1 / (1 + math.exp(-value))
-                loss = - labels[i] * math.log(predicted) - (1 - labels[i]) * math.log(1 - predicted)
-                total_loss += loss
+            for layer in self.neurons:
+                for neuron in layer:
+                    neuron.forwards_total = 0
+                    neuron.backwards_gradient = 0           
+            for j, layer in enumerate(self.neurons):
+                for k, neuron in enumerate(layer):
+                    if neuron.bInput == True:
+                        neuron.forwards_total = features[k][i]
+                    if neuron.bOutput == False:
+                        for l, weight in enumerate(neuron.weights):
+                            self.neurons[j+1][l].forwards_total += neuron.forwards_total * weight
+                    else:
+                        if neuron.activation == "linear":
+                            loss = neuron.forwards_total - label
+                            #print(loss)
+                            total_loss += loss ** 2
+                        elif neuron.activation == "logistic":
+                            predicted = 1 / (1 + math.exp(-neuron.forwards_total))
+                            loss = - label * math.log(predicted) - (1 - label) * math.log(1 - predicted)
+                            total_loss += loss
         return total_loss / max(1, len(labels))

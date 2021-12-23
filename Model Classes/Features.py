@@ -15,9 +15,9 @@ class Features:
             feature = []
             for x in range(data_points):
                 if integer_only:                   
-                    feature.append(round(random.random() * 6 - 3))
+                    feature.append(round(random.random() * 2 - 1))
                 else:
-                    feature.append((random.random() * 6 - 3))
+                    feature.append((random.random() * 2 - 1))
             random.shuffle(feature)
             self.features.append(feature)
         

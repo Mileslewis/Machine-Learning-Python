@@ -12,10 +12,10 @@ def test_linear():
     labels = Labels().test_labels_linear(features, noise = 0.01)
     #print(labels)
     initial_model = Models([],regression = "linear")
-    initial_model.random_model(features, 2)
+    initial_model.initialize_model(features)
+    initial_model.randomize_model()
     print("starting_model:")
-    initial_model.print_weights()
-    initial_model.print_regression()
+    initial_model.print_model()
 
     #############    set hyperparameters and make graphs   #########
     learning_rate = [0.1,0.05,0.03,0.01]
@@ -67,10 +67,10 @@ def test_logistic():
     labels = Labels().test_labels_logistic(features)
     #print(labels)
     initial_model = Models([],regression = "logistic")
-    initial_model.random_model(features, 2)
+    initial_model.initialize_model(features,regression = "logistic")
+    initial_model.randomize_model()
     print("starting_model:")
-    initial_model.print_weights()
-    initial_model.print_regression()
+    initial_model.print_model()
 
     #############    set hyperparameters and make graphs   #########
     learning_rate = [0.1,0.05,0.03,0.01]
@@ -105,7 +105,7 @@ def test_logistic():
             df.insert(location, column, total_losses)
             location = location + 1
             columns.append(column)
-            #print(f"batch size: {B}, learning rate: {L}  final model: {model.weights}, final average log loss: {model.test(features,labels)}")
+            print(f"batch size: {B}, learning rate: {L}, final average log loss: {model.test(features,labels)}")
     px.line(
         df,
         y=[x for x in columns],
