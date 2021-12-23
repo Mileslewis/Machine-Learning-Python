@@ -7,12 +7,13 @@ from Models import Models
 
 def test_linear():
     #############    set hyperparameters and make graphs   #########
-    features = Features().test_features(data_points = 20)
+    features = Features().test_features(data_points = 40)
     #print(features)
-    labels = Labels().test_labels_linear(features, noise = 0.01)
+    labels = Labels().test_labels_linear(features, noise = 0)
     #print(labels)
     initial_model = Models([],regression = "linear")
     initial_model.initialize_model(features)
+    initial_model.add_layer(neurons = 3)
     initial_model.randomize_model()
     print("starting_model:")
     initial_model.print_model()
@@ -21,7 +22,7 @@ def test_linear():
     learning_rate = [0.1,0.05,0.03,0.01]
     batch = [1,5,15]
     repeats = 40
-    cutoff = 1000000
+    cutoff = 1000
 
     df = pd.DataFrame()
     columns = []
@@ -62,12 +63,13 @@ def test_linear():
 
 def test_logistic():
     #############    set hyperparameters and make graphs   #########
-    features = Features().test_features(data_points = 20,integer_only = True)
+    features = Features().test_features(data_points = 40,integer_only = True)
     #print(features)
     labels = Labels().test_labels_logistic(features)
     #print(labels)
     initial_model = Models([],regression = "logistic")
     initial_model.initialize_model(features,regression = "logistic")
+    initial_model.add_layer(neurons = 3,activation = "ReLU")
     initial_model.randomize_model()
     print("starting_model:")
     initial_model.print_model()
@@ -76,7 +78,7 @@ def test_logistic():
     learning_rate = [0.1,0.05,0.03,0.01]
     batch = [1,5,15]
     repeats = 50
-    cutoff = 1000000
+    cutoff = 1000
 
     df = pd.DataFrame()
     columns = []
@@ -105,13 +107,13 @@ def test_logistic():
             df.insert(location, column, total_losses)
             location = location + 1
             columns.append(column)
-            print(f"batch size: {B}, learning rate: {L}, final average log loss: {model.test(features,labels)}")
+            #print(f"batch size: {B}, learning rate: {L}, final average log loss: {model.test(features,labels)}")
     px.line(
         df,
         y=[x for x in columns],
         title="Total log loss at each epoch for Initial Model with different Batch Sizes/Learning Rates",
         labels={"value": "log loss", "index": "epoch"},
-        log_y=False,
+        log_y=True,
     ).show()
 
 

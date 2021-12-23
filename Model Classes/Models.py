@@ -21,12 +21,6 @@ class Models:
             for neuron in layer:
                 neuron.print_neuron()
 
-    def print_weights(self):
-        print(self.neurons)
-
-    def print_regression(self):
-        print(self.regression)
-
     def initialize_model(self, features, regression = "linear"):
         self.neurons.clear()
         input_neurons = []
@@ -46,12 +40,12 @@ class Models:
                     self.neurons[i][j].weights.append(random.random() * 2 * size - size)
                 neuron.reset_gradients()
 
-    def add_layer(self, neurons = 1, layer_pos = -1):
+    def add_layer(self, neurons = 1, layer_pos = -1, activation = "none"):
         if layer_pos == -1:
             layer_pos = len(self.neurons) - 1
         new_layer = []
         for i in range(neurons):
-            new_layer.append(Neuron(layer = layer_pos))
+            new_layer.append(Neuron(layer = layer_pos, activation = activation))
         self.neurons.insert(layer_pos,new_layer)
         for layer in self.neurons[layer_pos+1:]:
             for neuron in layer:
@@ -84,18 +78,26 @@ class Models:
                         if neuron.bInput == True:
                             neuron.forwards_total = features[k][i]
                         if neuron.bOutput == False:
+                            neuron.activate()
                             for l, weight in enumerate(neuron.weights):
                                 self.neurons[j+1][l].forwards_total += neuron.forwards_total * weight
                         else:
                             if neuron.activation == "linear":
                                 loss = neuron.forwards_total - labels[i]
                                 #print(loss)
-                                total_loss += loss ** 2
+                                if loss < 10000:
+                                    total_loss += loss ** 2
+                                else:
+                                     total_loss += 10000000
+                                     return total_loss
                             elif neuron.activation == "logistic":
                                 predicted = 1 / (1 + math.exp(-neuron.forwards_total))
-                                loss = -labels[i] * math.log(predicted) - (1 - labels[i]) * math.log(1 - predicted)
-                                # print(f"{i} loss: {loss}")
-                                total_loss += loss                                
+                                if predicted > 0 and predicted < 1:
+                                    loss = -labels[i] * math.log(predicted) - (1 - labels[i]) * math.log(1 - predicted)
+                                    # print(f"{i} loss: {loss}")
+                                    total_loss += loss
+                                else:
+                                    return total_loss + 10000000                               
                 # print(f"{i} loss: {loss}")
                 for j in range(model_length-1,-1,-1):
                     for k, neuron in enumerate(self.neurons[j]):
@@ -109,6 +111,7 @@ class Models:
                                 grad = neuron.forwards_total * n.backwards_gradient
                                 neuron.weight_gradients[k] += grad
                                 neuron.backwards_gradient += grad
+                                neuron.back_propagate()
 
                 # print(f"diff: {total_diff}")
                 i += 1
