@@ -20,9 +20,11 @@ class Neuron:
         print("activation: " + self.activation)
 
     def reset_gradients(self):
+# weight gradients need to be reset after each batch has been finished and the model has been updated.
         self.weight_gradients = [0 for w in self.weights]
 
     def activate(self):
+# modifies output value of neuron from it's input
         if self.activation == "none":
             return
         elif self.activation == "ReLU":
@@ -37,6 +39,7 @@ class Neuron:
         return
     
     def back_propagate(self):
+# gives the differential of the model with respect to the input to this neuron.
         if self.activation == "none":
             return
         elif self.activation == "ReLU":

@@ -14,19 +14,26 @@ I will try to give a brief desciption of what each file does here:
 
 - Again plan to have copy_format() function and other data handling functions.
 
+###### Neuron:
+- Neurons have a list of weights for each connection to neuron in next layer, a layer (position), activation (function the input to neuron is modified by before output)
+bInput and bOutput to show input/output neuron. A forwards total to show the output of that neuron, backwards_gradient and show gradient of model
+for change in input to that neuron and a list of weight_gradients which store how much each weight is being changed by during this batch.
+- copy() and print_neuron() functions included and functions to help with the forward and backwards propagation of the model. 
+
 ###### Models:
-- Models have a list of coefficiencts and then a 'regression' (linear or logistic) option.
-- Function to create random model with 1 term for each feature.
+- Models have a list of neurons (usually a list of a list of neurons in each layer) and a regression which controls how it should output results.
+- initialize_model() function to create random model with 1 input neuron for each feature and 1 output neuron.
+- add_layer() function to add a layer of neurons to the model at a given position.
+- randomize_model() function to randomize the weights of all connections between neurons.
 - Copy() function to copy a model so that it can be updated multiple times from the same inital state to compare rsesults.
 - update() function to update a model once through given features/labels set using batch gradient descent and regularization.
 - test() function to test loss of model with given features/labels.
 
-- Next will be increasing the complexity of model to allow neural network and potentially trying some different input methods.
 
 ###### main:
-- Currently just calls the test functions which a model with each regression type with various hyperperamters and then creates graphs for comparisions.
+- Currently just calls the test functions which a model with each regression type and some extra layers with various hyperperamters and then creates graphs for comparisions.
 
-- Hopefully will make some new scripts to try my classes out with real input data.
+- Hopefully will make some new scripts to try my classes out with real input data and handle some more complex types of output.
 
 
 ## Archive

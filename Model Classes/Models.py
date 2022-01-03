@@ -22,6 +22,7 @@ class Models:
                 neuron.print_neuron()
 
     def initialize_model(self, features, regression = "linear"):
+# initialize a model with 1 input neuron for each feature and 1 output neuron.
         self.neurons.clear()
         input_neurons = []
         for i in range(len(features)):
@@ -32,7 +33,7 @@ class Models:
 
 
     def randomize_model(self, size=1, norm=True):
-# random starting weight for each feature.
+# random starting weight for each neuron connection weight.
         for i in range(len(self.neurons)-1):
             print(i)
             for j, neuron in enumerate(self.neurons[i]):
@@ -41,6 +42,7 @@ class Models:
                 neuron.reset_gradients()
 
     def add_layer(self, neurons = 1, layer_pos = -1, activation = "none"):
+# add layer of neurons at given position (default position is 1 layer before final (output) layer)
         if layer_pos == -1:
             layer_pos = len(self.neurons) - 1
         new_layer = []
