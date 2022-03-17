@@ -8,12 +8,12 @@ from Models import Models
 def test_linear():
     #############    set hyperparameters and make graphs   #########
     features = Features().test_features(data_points = 40)
-    #print(features)
+    print(f"length: {len(features.data)}")
     labels = Labels().test_labels_linear(features, noise = 0)
     #print(labels)
     initial_model = Models([],regression = "linear")
     initial_model.initialize_model(features)
-    initial_model.add_layer(neurons = 3)
+    initial_model.add_layer(neurons = 2)
     initial_model.randomize_model()
     print("starting_model:")
     initial_model.print_model()
@@ -63,13 +63,14 @@ def test_linear():
 
 def test_logistic():
     #############    set hyperparameters and make graphs   #########
-    features = Features().test_features(data_points = 40,integer_only = True)
-    #print(features)
-    labels = Labels().test_labels_logistic(features)
+    features_log = Features().test_features(data_points = 40,integer_only = True)
+    print(f"length: {len(features_log.data)}")
+    print(features_log.names)
+    labels = Labels().test_labels_logistic(features_log)
     #print(labels)
     initial_model = Models([],regression = "logistic")
-    initial_model.initialize_model(features,regression = "logistic")
-    initial_model.add_layer(neurons = 3,activation = "ReLU")
+    initial_model.initialize_model(features_log,regression = "logistic")
+    initial_model.add_layer(neurons = 2,activation = "ReLU")
     initial_model.randomize_model()
     print("starting_model:")
     initial_model.print_model()
@@ -92,7 +93,7 @@ def test_logistic():
             iteration = 0
             while iteration < repeats:
                 total_losses.append(
-                    model.update(features, labels, B, L, l2=0, l1=0)
+                    model.update(features_log, labels, B, L, l2=0, l1=0)
                 )
                 # print(f"{iteration+1}: {model}")
                 if total_losses[iteration] > cutoff:  # if the model has deconverged

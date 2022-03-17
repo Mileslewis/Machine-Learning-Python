@@ -3,8 +3,11 @@ import math
 from Neuron import Neuron
 
 class Models:
-    def __init__(self, neurons=[], regression="linear"):
-        self.neurons = neurons
+    def __init__(self, neurons=None, regression="linear"):
+        if neurons == None:
+            self.neurons = []
+        else:
+            self.neurons = neurons
         self.regression = regression
 
     def copy(self):
@@ -25,7 +28,7 @@ class Models:
 # initialize a model with 1 input neuron for each feature and 1 output neuron.
         self.neurons.clear()
         input_neurons = []
-        for i in range(len(features)):
+        for i in range(len(features.data)):
             input_neurons.append(Neuron(bInput = True))
         self.neurons.append(input_neurons)
         self.neurons.append([Neuron(layer = 1, activation = regression,bOutput = True)])
@@ -78,7 +81,7 @@ class Models:
                 for j, layer in enumerate(self.neurons):
                     for k, neuron in enumerate(layer):
                         if neuron.bInput == True:
-                            neuron.forwards_total = features[k][i]
+                            neuron.forwards_total = features.data[k][i]
                         if neuron.bOutput == False:
                             neuron.activate()
                             for l, weight in enumerate(neuron.weights):
@@ -148,7 +151,7 @@ class Models:
             for j, layer in enumerate(self.neurons):
                 for k, neuron in enumerate(layer):
                     if neuron.bInput == True:
-                        neuron.forwards_total = features[k][i]
+                        neuron.forwards_total = features.data[k][i]
                     if neuron.bOutput == False:
                         for l, weight in enumerate(neuron.weights):
                             self.neurons[j+1][l].forwards_total += neuron.forwards_total * weight
