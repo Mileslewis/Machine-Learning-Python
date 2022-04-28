@@ -142,7 +142,7 @@ class Models:
 
         return total_loss
 
-    def test(self, features, labels, return_confusion = False, threshold = 0):
+    def test(self, features, labels, return_confusion = False, threshold = 0.5):
 # tests loss of model with given features/labels.
         total_loss = 0
         if return_confusion == True:
