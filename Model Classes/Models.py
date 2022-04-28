@@ -20,7 +20,8 @@ class Models:
         return Models(neurons=copied_neurons, regression=self.regression)
 
     def print_model(self):
-        for layer in self.neurons:
+        for i,layer in enumerate(self.neurons):
+            print(f"layer: {i}")
             for neuron in layer:
                 neuron.print_neuron()
 
@@ -38,7 +39,7 @@ class Models:
     def randomize_model(self, size=1, norm=True):
 # random starting weight for each neuron connection weight.
         for i in range(len(self.neurons)-1):
-            print(i)
+            #print(i)
             for j, neuron in enumerate(self.neurons[i]):
                 for k in self.neurons[i+1]:
                     self.neurons[i][j].weights.append(random.random() * 2 * size - size)
@@ -96,13 +97,14 @@ class Models:
                                      total_loss += 10000000
                                      return total_loss
                             elif neuron.activation == "logistic":
-                                predicted = 1 / (1 + math.exp(-neuron.forwards_total))
+                                predicted = 1 / (1 + math.exp(max(-25,min(25,-neuron.forwards_total))))
                                 if predicted > 0 and predicted < 1:
                                     loss = -labels[i] * math.log(predicted) - (1 - labels[i]) * math.log(1 - predicted)
                                     # print(f"{i} loss: {loss}")
-                                    total_loss += loss
                                 else:
-                                    return total_loss + 10000000                               
+                                    print('Error ' + str(predicted) + ' ' + str(labels[i]) + ' ' + str(neuron.forwards_total))
+                                    return total_loss + 10000000
+                                total_loss += loss                             
                 # print(f"{i} loss: {loss}")
                 for j in range(model_length-1,-1,-1):
                     for k, neuron in enumerate(self.neurons[j]):
@@ -140,9 +142,14 @@ class Models:
 
         return total_loss
 
-    def test(self, features, labels):
+    def test(self, features, labels, return_confusion = False, threshold = 0):
 # tests loss of model with given features/labels.
         total_loss = 0
+        if return_confusion == True:
+            TP = 0
+            FP = 0
+            FN = 0
+            TN = 0
         for i, label in enumerate(labels):
             for layer in self.neurons:
                 for neuron in layer:
@@ -162,6 +169,24 @@ class Models:
                             total_loss += loss ** 2
                         elif neuron.activation == "logistic":
                             predicted = 1 / (1 + math.exp(-neuron.forwards_total))
+                            #print(predicted)
+                            #print(label)
                             loss = - label * math.log(predicted) - (1 - label) * math.log(1 - predicted)
+                            #print(loss)
+                            if return_confusion == True:
+                                if predicted >= threshold:
+                                    if label == 1:
+                                        TP += 1
+                                    else:
+                                        FP +=1
+                                else:
+                                    if label == 1:
+                                        FN += 1
+                                    else:
+                                        TN +=1                                    
                             total_loss += loss
-        return total_loss / max(1, len(labels))
+        if return_confusion == True:
+            return total_loss / max(1, len(labels)),TP,FP,FN,TN
+        else:
+            return total_loss / max(1, len(labels))
+        

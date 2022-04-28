@@ -2,14 +2,26 @@ import random
 import pandas as pd
 
 class Features:
-    def __init__(self,data = None,names=[],offset = [],divisor = []):
+    def __init__(self,data = None,names=None,offset = None,divisor = None):
         if data == None:
             self.data = []
         else:
             self.data = data
-        self.names = names
-        self.offset= offset
-        self.divisor = divisor
+
+        if names == None:
+            self.names = []
+        else:
+            self.names = names
+
+        if offset == None:
+            self.offset = []
+        else:
+            self.offset = offset
+
+        if divisor == None:
+            self.divisor = []
+        else:
+            self.divisor = divisor
 
     def test_features(self,const_feature = True,num_features = 2,data_points = 40,integer_only = False):
 # Make a list of test feature lists, optional constant feature list (always 1) and optional rounding.

@@ -1,8 +1,11 @@
 import random
 
 class Labels:
-    def __init__(self):
-        self.labels = []
+    def __init__(self,labels = None):
+        if labels == None:
+            self.labels = []
+        else:
+            self.labels = labels
 
     def test_labels_linear(self,features,noise = 0):
 # makes a list of test labels from inputted features with a random 'target_model'

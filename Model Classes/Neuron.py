@@ -18,9 +18,8 @@ class Neuron:
         return Neuron(weights = self.weights.copy(),layer = self.layer, activation=self.activation,bInput = self.bInput,bOutput = self.bOutput, forwards_total = 0, backwards_gradient = 0)
 
     def print_neuron(self):
-        print(self.weights)
-        print(f"layer: {self.layer}")
         print("activation: " + self.activation)
+        print(self.weights)
 
     def reset_gradients(self):
 # weight gradients need to be reset after each batch has been finished and the model has been updated.
